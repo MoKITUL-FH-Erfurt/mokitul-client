@@ -1,0 +1,53 @@
+version: "3"
+
+vars:
+  IMAGE_NAME: docker.io/bitnami/moodle:4.3
+  CONTAINER_ID:
+    sh: docker ps --filter "ancestor={{.IMAGE_NAME}}" -q
+
+tasks:
+  default:
+    cmds:
+      - task: deploy
+
+  deploy:
+    cmds:
+      - task: build
+      - task: copy-dist-amd
+      # - task: purge-caches
+
+  purge-caches:
+    cmds:
+      - |
+        if [ -n "{{.CONTAINER_ID}}" ]; then
+          docker exec -it {{.CONTAINER_ID}} chown -R daemon:daemon /bitnami/moodle/local/mokitul/amd/build && echo "Changed ownership to daemon for the directory"
+          docker exec -it {{.CONTAINER_ID}} chmod -R 664 /bitnami/moodle/local/mokitul/amd/build && echo "Changed permissions for the directory"
+
+          docker exec -it {{.CONTAINER_ID}} php /bitnami/moodle/admin/cli/purge_caches.php && echo "Purged caches for the container {{.CONTAINER_ID}}"
+        else
+          echo "No running container found for the image $IMAGE_NAME"
+        fi
+
+  build:
+    cmds:
+      - npm run build
+
+  dev:
+    cmds:
+      - npm run dev
+
+  install:
+    cmds:
+      - npm install
+
+  copy-dist-amd:
+    desc: "Copy dist-amd files into moodle directory"
+    cmds:
+      - |
+        if docker exec {{.CONTAINER_ID}} [ -e "/bitnami/moodle/local/mokitul" ]; then
+          docker cp dist-amd/lib.min.js {{.CONTAINER_ID}}:/bitnami/moodle/local/mokitul/amd/build/lib.min.js
+          docker cp dist-amd/lib.min.js.map {{.CONTAINER_ID}}:/bitnami/moodle/local/mokitul/amd/build/lib.min.js.map
+          echo "Sucessfully copied lib.min.js"
+        else
+          echo "Mokitul Core Plugin is not installed"
+        fi
