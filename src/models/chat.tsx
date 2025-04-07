@@ -3,7 +3,7 @@ import { Message } from "./message";
 type Chat = {
   id: string;
   messages: Message[];
-  createdAt: string;
+  timestamp: number;
   summary: string;
 };
 

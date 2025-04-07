@@ -19,7 +19,17 @@ interface SettingsState {
   layout: Layout;
   setLayout: (layout: Layout) => void;
   getLayout: () => Layout;
+  getScope: () => string;
 }
+
+const mapLayoutToScope = (layout: Layout) => {
+  switch (layout) {
+    case Layout.block:
+      return "course";
+    case Layout.standalone:
+      return "file";
+  }
+};
 
 const useSettingsStore = create<SettingsState>((set) => ({
   serviceUrl: "",
@@ -51,6 +61,7 @@ const useSettingsStore = create<SettingsState>((set) => ({
   layout: Layout.block,
   setLayout: (layout: Layout) => set({ layout }),
   getLayout: (): Layout => useSettingsStore.getState().layout,
+  getScope: (): string => mapLayoutToScope(useSettingsStore.getState().layout),
 }));
 
 export default useSettingsStore;

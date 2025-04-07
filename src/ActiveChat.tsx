@@ -15,6 +15,7 @@ import PreviousError from "./components/custom/PreviousError";
 import { getMoodleUrl } from "@/utils/moodle";
 import { hashValue } from "./utils/hash";
 import IsolatedMarkdownRenderer from "./components/custom/MarkdownRenderer";
+import NodeViewer from "./components/custom/NodeViewer";
 
 const ActiveChat: FunctionComponent = () => {
   const { activeChat, hasActiveChat, activeChatId, addMessage } =
@@ -43,8 +44,6 @@ const ActiveChat: FunctionComponent = () => {
     const id = chat.id;
     const length = lastMessage.content.length;
 
-    console.log("resubmitting");
-
     lock();
 
     let url = getMoodleUrl();
@@ -68,8 +67,8 @@ const ActiveChat: FunctionComponent = () => {
       const data = await response.json();
 
       addMessage({
-        content: data.content,
-        createdAt: new Date().toLocaleTimeString(),
+        content: data.response,
+        timestamp: data.timestamp,
         role: "assistant",
       });
     } catch (e) {
@@ -110,8 +109,11 @@ const ActiveChat: FunctionComponent = () => {
                   <IsolatedMarkdownRenderer>
                     {message.content}
                   </IsolatedMarkdownRenderer>
-                  <p className="text-gray-500 text-xs">{message.createdAt}</p>
+                  <p className="text-gray-500 text-xs">
+                    {new Date(message.timestamp * 1000).toLocaleString()}
+                  </p>
                 </ChatBubbleMessage>
+                <NodeViewer nodes={message.nodes} />
               </ChatBubble>
             ))}
             {locked && <LoadingIndicator />}

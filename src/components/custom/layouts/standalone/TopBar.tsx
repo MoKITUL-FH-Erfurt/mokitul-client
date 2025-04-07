@@ -53,11 +53,17 @@ const TopBar: React.FC = () => {
       <div className="flex justify-between">
         <div>
           <h1 className="text-xl font-bold">{chat.summary}</h1>
-          <h2 className="text-sm text">{chat.createdAt}</h2>
+          <h2 className="text-sm text">
+            {new Date(chat.timestamp * 1000).toLocaleString()}
+          </h2>
         </div>
-        <PopoverTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-primary hover:text-primary-foreground w-10 h-10">
-          <FontAwesomeIcon icon={faEdit} />
-        </PopoverTrigger>
+        {
+          //<PopoverTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-primary hover:text-primary-foreground w-10 h-10">
+          //<Button size={"icon"}>
+          //<FontAwesomeIcon icon={faEdit} />
+          //</Button>
+          //</PopoverTrigger>
+        }
       </div>
     </Popover>
   );

@@ -16,7 +16,7 @@ import { Chat } from "./models/chat";
 import useChatStore from "./stores/chat-store";
 import { toast } from "sonner";
 import { getMoodleUrl } from "./utils/moodle";
-import useSettingsStore from "./stores/settings-store";
+import useSettingsStore, { Layout } from "./stores/settings-store";
 import { v4 as uuidv4 } from "uuid";
 import { useTracking } from "react-tracking";
 import { timeStamp } from "console";
@@ -29,24 +29,22 @@ type Props = {
 const CreateChatDialog: FunctionComponent<Props> = ({ children }) => {
   const { addChat } = useHistoryStore();
   const { markChatAsActive } = useChatStore();
-  const { file, course } = useSettingsStore();
+  const { file, course, getScope } = useSettingsStore();
 
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
 
   const { trackEvent } = useTracking();
 
-  const handleSubmit = async () => {
-    console.log("Handling submit for create chat dialog");
+  const scope = getScope();
 
-    let chat: Chat = {
+  const handleSubmit = async () => {
+    const chat: Chat = {
       summary: name,
       messages: [],
       id: uuidv4(),
-      createdAt: new Date().toLocaleDateString(),
+      timestamp: Date.now() / 1000,
     };
-
-    console.log(`Creating chat for ${course} and ${file}`);
 
     // actually submit to the api
     const url = getMoodleUrl();
@@ -54,19 +52,14 @@ const CreateChatDialog: FunctionComponent<Props> = ({ children }) => {
       courseId: course,
       fileId: file,
       summary: name,
-      timeStamp: new Date().toLocaleDateString(),
+      scope: scope,
     };
 
-    console.log(body);
-
     if (!(import.meta.env.MODE === "development")) {
-      console.log("Mocking disabled - sending request to api");
-
       const response = await fetch(url, {
         method: "POST",
         body: JSON.stringify(body),
       });
-      console.log(response);
 
       if (!response.ok) {
         throw new Error("Failed to create chat");
@@ -78,8 +71,6 @@ const CreateChatDialog: FunctionComponent<Props> = ({ children }) => {
 
       chat.id = id;
     }
-
-    console.log("Adding chat: ", chat);
 
     addChat(chat);
 
@@ -99,15 +90,13 @@ const CreateChatDialog: FunctionComponent<Props> = ({ children }) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button size={"icon"} variant="default">
-          {children}
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px] z-[1015]">
         <DialogHeader>
-          <DialogTitle>Create Chat</DialogTitle>
-          <DialogDescription>Create a chat.</DialogDescription>
+          <DialogTitle>Erstelle einen Chat</DialogTitle>
+          <DialogDescription>
+            Gib dem Chat einen Namen und fang an zu schreiben.
+          </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">

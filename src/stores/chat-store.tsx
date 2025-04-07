@@ -17,8 +17,6 @@ type ChatStore = {
 const useChatStore = create<ChatStore>((set, get) => ({
   activeChatId: undefined,
   markChatAsActive: (chatId) => {
-    console.log("Marking chat as active: ", chatId);
-
     return set({ activeChatId: chatId });
   },
   activeChat: () => {
@@ -30,8 +28,6 @@ const useChatStore = create<ChatStore>((set, get) => ({
   },
 
   hasActiveChat: () => {
-    console.log("Active chat id: ", get().activeChatId);
-
     return get().activeChatId !== undefined;
   },
 

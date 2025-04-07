@@ -28,7 +28,9 @@ const HistoryList: React.FC = () => {
             </DeleteButton>
           )}
           <CreateChatDialog>
-            <FontAwesomeIcon icon={faAdd} />
+            <Button size="icon" variant={"secondary"}>
+              <FontAwesomeIcon icon={faAdd} />
+            </Button>
           </CreateChatDialog>
         </div>
         <Separator />
@@ -66,7 +68,9 @@ const ChatHistoryCard: React.FC<ChatHistoryCardProps> = ({ chat }) => {
           onClick={() => markChatAsActive(chat.id)}
         >
           <p className="text-lg font-semibold">{chat.summary}</p>
-          <CardDescription>{chat.createdAt}</CardDescription>
+          <CardDescription>
+            {new Date(chat.timestamp * 1000).toLocaleString()}
+          </CardDescription>
         </div>
         <DeleteButton id={chat.id}>
           <FontAwesomeIcon icon={faTrash} />

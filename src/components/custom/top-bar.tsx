@@ -60,15 +60,19 @@ const TopBar: React.FC = () => {
                 <h2 className="text-sm text">{activeChat.createdAt}</h2>
                 */}
             </div>
-            <PopoverTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-primary hover:text-primary-foreground w-10 h-10">
-              <Button size={"icon"}>
-                <FontAwesomeIcon icon={faEdit} />
-              </Button>
-            </PopoverTrigger>
+            {
+              //<PopoverTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-primary hover:text-primary-foreground w-10 h-10">
+              //<Button size={"icon"} variant={"secondary"}>
+              //  <FontAwesomeIcon icon={faEdit} />
+              //x</Button>
+              //</PopoverTrigger>
+            }
           </div>
         </Popover>
         <CreateChatDialog>
-          <FontAwesomeIcon icon={faAdd} />
+          <Button size="icon" variant={"secondary"}>
+            <FontAwesomeIcon icon={faAdd} />
+          </Button>
         </CreateChatDialog>
         <DeleteButton id={activeChatId}>
           <FontAwesomeIcon icon={faTrash} />

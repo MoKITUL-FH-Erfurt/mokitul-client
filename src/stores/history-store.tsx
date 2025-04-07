@@ -5,6 +5,7 @@ import useChatStore from "./chat-store";
 import { getMoodleUrl } from "@/utils/moodle";
 
 import { v4 as uuidv4 } from "uuid";
+import { Layout } from "./settings-store";
 
 type HistoryState = {
   chats: { [key: string]: Chat };
@@ -14,7 +15,8 @@ type HistoryState = {
   clearChats: () => void;
   loadChatsFromRemote: (
     course: string | undefined,
-    file: string | undefined
+    file: string | undefined,
+    scope: string,
   ) => Promise<void>;
 };
 
@@ -56,13 +58,10 @@ const useHistoryStore = create<HistoryState>((set) => ({
     }),
   loadChatsFromRemote: async (
     course: string | undefined,
-    file: string | undefined
+    file: string | undefined,
+    scope: string,
   ) => {
-    console.log(`Loading chats from remote course: ${course}, ${file}`);
-
     if (import.meta.env.MODE === "development") {
-      console.log("Skipping loading chats from remote in development mode");
-
       return;
     }
 
@@ -76,15 +75,14 @@ const useHistoryStore = create<HistoryState>((set) => ({
       searchParams.append("fileId", file);
     }
 
+    searchParams.append("scope", scope);
+
     let url = getMoodleUrl();
     url = `${url}?${searchParams.toString()}`;
 
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
-        console.log("Loaded chats from remote");
-        console.log(data);
-
         data.forEach((chat: any) => {
           const mappedChat: Chat = {
             ...chat,

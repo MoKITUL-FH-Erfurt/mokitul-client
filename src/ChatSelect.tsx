@@ -52,14 +52,12 @@ const ChatSelect: React.FC = () => {
               <CommandEmpty>No chat found.</CommandEmpty>
               <CommandGroup>
                 {Object.values(chats).map((chat) => (
-                  console.log(chat),
                   <CommandItem
                     key={chat.id}
                     className="z-2000"
-                    value={chat.summary ?? "Untitled"}
+                    value={chat.id ?? -1}
                     onSelect={() => {
-                      console.log("Hello");
-                      setValue(chat.summary ?? "Untitled");
+                      setValue(chat.id ?? "Untitled");
                       setOpen(false);
                       markChatAsActive(chat.id);
 
@@ -69,14 +67,13 @@ const ChatSelect: React.FC = () => {
                           chatId: chat.id,
                         },
                       });
-
                     }}
                   >
                     {chat.summary ?? "Untitled"}
                     <Check
                       className={cn(
                         "absolute right-0 mr-2",
-                        value === chat.id ? "block" : "hidden"
+                        value === chat.id ? "block" : "hidden",
                       )}
                     />
                   </CommandItem>

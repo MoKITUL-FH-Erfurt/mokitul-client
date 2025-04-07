@@ -1,23 +1,17 @@
 import { getMoodleUrl } from "@/utils/moodle";
 
 const deleteChat = async (chatId: string) => {
-    // if (!import.meta.env.PROD) return;
+  // if (!import.meta.env.PROD) return;
 
-    console.log(`Deleting chat with id: ${chatId}`);
+  const url = getMoodleUrl() + `?conversationId=${chatId}`;
 
-    const url = getMoodleUrl() + `?conversationId=${chatId}`;
+  const response = await fetch(url, {
+    method: "DELETE",
+  });
 
-    console.log(`Sending delete request to ${url}`);
-
-    const response = await fetch(url, {
-        method: "DELETE",
-    });
-
-    if (!response.ok) {
-        throw new Error("Failed to delete chat");
-    }
-
-    console.log("Chat deleted successfully");
-}
+  if (!response.ok) {
+    throw new Error("Failed to delete chat");
+  }
+};
 
 export default deleteChat;

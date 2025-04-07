@@ -21,8 +21,6 @@ const App: FunctionComponent<AppProps> = ({ children }) => {
     {},
     {
       dispatch: async (data) => {
-        console.log("Sending event", data);
-
         if (!isAnalyticsEvent(data)) {
           return;
         }
@@ -42,12 +40,7 @@ const renderApp = (
   file: string | undefined,
   preferredLayout: string | undefined = "block",
 ) => {
-  console.log(`Injecting app into dome element ${element}`);
-
   if (!element) return;
-
-  console.log(`Rendering app with course: ${course} and file: ${file}`);
-
   createRoot(document.getElementById(element)!).render(
     <StrictMode>
       <App>

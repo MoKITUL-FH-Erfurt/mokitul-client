@@ -28,7 +28,6 @@ const ChatBottomBar: FunctionComponent<Props> = () => {
   const submitToApi = async (message: string, conversationId: string) => {
     // actual logic
     if (!(import.meta.env.MODE === "development")) {
-      console.log("Mocking disabled - sending request to api");
       // send message to api
       let url = getMoodleUrl();
       url = `${url}?conversationId=${conversationId}`;
@@ -43,20 +42,17 @@ const ChatBottomBar: FunctionComponent<Props> = () => {
         }),
       });
 
-      console.log(response);
-
       if (!response.ok) {
         throw new Error("Failed to send message to api");
       }
 
       const data = await response.json();
 
-      console.log(data);
-
       addMessage({
-        content: data.answer,
-        createdAt: new Date().toLocaleTimeString(),
+        content: data.response,
+        timestamp: data.timestamp,
         role: "assistant",
+        nodes: data.nodes,
       });
     } else {
       console.log("Mocking enabled - not sending request to api");
@@ -66,8 +62,8 @@ const ChatBottomBar: FunctionComponent<Props> = () => {
 
       addMessage({
         content: "This is a mock response",
-        createdAt: new Date().toLocaleTimeString(),
         role: "assistant",
+        timestamp: 0,
       });
     }
   };
@@ -78,7 +74,7 @@ const ChatBottomBar: FunctionComponent<Props> = () => {
 
     addMessage({
       content: input,
-      createdAt: new Date().toLocaleTimeString(),
+      timestamp: Date.now() / 1000,
       role: "user",
     });
 

@@ -6,12 +6,8 @@ interface Event {
 }
 
 const sendEvent = async (event: Event & any) => {
-  console.log("Sending event:", event);
-
   const moodleUrl = getMoodleBaseUrl();
   const url = `${moodleUrl}/analytics.php`;
-
-  console.log("Sending event to:", url);
 
   const { eventType, eventProperties, ...additionalData } = event;
 
@@ -36,7 +32,6 @@ const sendEvent = async (event: Event & any) => {
     if (!response.ok) {
       throw new Error(`Error: ${response.statusText}`);
     }
-    console.log("Event sent successfully");
   } catch (error) {
     console.log("Error sending event:", error);
   }

@@ -10,6 +10,7 @@ import { useTracking } from "react-tracking";
 import useMediaQuery from "./hooks/use-media-query";
 
 import { hashValue } from "@/utils/hash";
+import { Button } from "@/components/ui/button";
 
 type ChatWrapperProps = {
   id: string | undefined;
@@ -30,7 +31,8 @@ const ChatWrapper: React.FC<ChatWrapperProps> = ({
   preferredLayout,
 }) => {
   const { loadChatsFromRemote, chats } = useHistoryStore();
-  const { loadSettings, setFile, setCourse, setLayout } = useSettingsStore();
+  const { loadSettings, setFile, setCourse, setLayout, getScope } =
+    useSettingsStore();
 
   const { trackEvent } = useTracking();
 
@@ -48,17 +50,14 @@ const ChatWrapper: React.FC<ChatWrapperProps> = ({
     file && setFile(file);
     course && setCourse(course);
 
-    loadChatsFromRemote(course, file);
+    setLayout(preferredLayout);
+
+    loadChatsFromRemote(course, file, getScope());
 
     setLoading(false);
 
-    setLayout(preferredLayout);
-
     let hashedCourse = hashValue(course);
     let hashedFile = hashValue(file);
-
-    console.log(hashedCourse);
-    console.log(hashedFile);
 
     trackEvent({
       eventType: "app_initialized",
@@ -76,8 +75,10 @@ const ChatWrapper: React.FC<ChatWrapperProps> = ({
     return (
       <div className="flex flex-row w-full h-full items-center justify-center mokitul">
         <CreateChatDialog>
-          <p>Create Chat &nbsp;</p>
-          <FontAwesomeIcon icon={faAdd} />
+          <Button>
+            <p>Create Chat &nbsp;</p>
+            <FontAwesomeIcon icon={faAdd} />
+          </Button>
         </CreateChatDialog>
       </div>
     );
