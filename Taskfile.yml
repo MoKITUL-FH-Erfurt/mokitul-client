@@ -1,7 +1,7 @@
 version: "3"
 
 vars:
-  IMAGE_NAME: docker.io/bitnami/moodle:4.3
+  IMAGE_NAME: docker.io/bitnami/moodle:4.3.5
   CONTAINER_ID:
     sh: docker ps --filter "ancestor={{.IMAGE_NAME}}" -q
 
