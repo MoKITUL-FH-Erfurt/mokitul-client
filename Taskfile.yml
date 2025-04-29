@@ -12,6 +12,7 @@ tasks:
 
   deploy:
     cmds:
+      - task: install
       - task: build
       - task: copy-dist-amd
       # - task: purge-caches
@@ -27,6 +28,10 @@ tasks:
         else
           echo "No running container found for the image $IMAGE_NAME"
         fi
+
+  install:
+    cmds:
+      - npm install
 
   build:
     cmds:
